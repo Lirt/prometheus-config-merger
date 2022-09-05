@@ -1,0 +1,42 @@
+variables:
+  ARTIFACTORY_IMAGE_REGISTRY: ${AF_REGISTRY}/s_nfvi_caas-images-docker-local
+  IMAGE_NAME: 'prometheus-config-merger'
+  HELM_API_URL: https://${AF_REGISTRY}/artifactory/api/helm/s_nfvi_caas-helm-helm-local/reindex
+
+stages:
+  - docker_build
+  - helm_package
+
+.docker_build:
+  image: docker:latest
+  stage: docker_build
+  script:
+  - docker build
+           --tag ${ARTIFACTORY_IMAGE_REGISTRY}/${IMAGE_NAME}:${TAG}
+           .
+  - docker login -u ${AF_USER} -p ${AF_API_KEY} ${ARTIFACTORY_IMAGE_REGISTRY}
+  - docker push ${ARTIFACTORY_IMAGE_REGISTRY}/${IMAGE_NAME}:${TAG}
+  tags:
+    - caas-private
+
+docker_build_master:
+  extends: .docker_build
+  variables:
+    TAG: latest
+  only:
+  - master
+
+docker_build_branch:
+  extends: .docker_build
+  variables:
+    TAG: ${CI_COMMIT_SHA}
+  when: manual
+  only:
+  - merge_requests
+
+docker_build_tag:
+  extends: .docker_build
+  variables:
+    TAG: ${CI_COMMIT_TAG}
+  only:
+  - tags

@@ -1,0 +1,4 @@
+kubernetes
+mergedeep
+requests
+argparse
