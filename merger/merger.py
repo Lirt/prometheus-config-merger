@@ -30,9 +30,8 @@ class Merger():
     def cleanup(self, sig, frame):
         self.logger.info("Cleaning up watcher streams")
         self.w_configmaps.stop()
-        self.w_configmaps._api_client.close()
         self.stop = True
-        self.logger.info("Cleanup Finished")
+        raise Exception('Cleanup Finished')
 
     def start(self, ):
         self.load_kube_config()
@@ -118,4 +117,4 @@ class Merger():
                     event['object'].metadata.namespace)
                 self.load_and_merge_config()
         except Exception as e:
-            self.logger.error("Config map watcher exception: %s", e)
+            self.logger.warn("Config map watcher exception: %s", e)
