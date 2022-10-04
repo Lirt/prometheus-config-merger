@@ -25,5 +25,41 @@ pip install -r requirements.txt
 Run the program:
 
 ```bash
-python3 -m merger --prometheus-config-file-path 'my-test-config.yaml'
+python3 -m merger \
+        --prometheus-config-file-path 'my-test-config.yaml' \
+        --label-selector='prometheus-merge-config=1' \
+        --namespace 'monitoring' \
+        --reload-url 'http://localhost:9090/-/reload'
+```
+
+## Integrating with Prometheus Community helm chart
+
+If you want to use this sidecar with [prometheus-community helm chart](https://github.com/prometheus-community/helm-charts/tree/main/charts/prometheus), you need to add this container as a sidecar, create common volume and mount it.
+
+Here is example:
+
+```yaml
+server:
+  sidecarContainers:
+    prometheus-config-merger:
+      image: lirt/prometheus-config-merger:0.1.0
+      imagePullPolicy: IfNotPresent
+      args:
+      - --prometheus-config-file-path=/etc/config-prometheus/prometheus.yml
+      - --label-selector='my-org.io/prometheus-merge-config=1' \
+      - --namespace 'monitoring' \
+      - --reload-url 'http://localhost:9090/-/reload'
+      volumeMounts:
+      - name: prometheus-merged-config
+        mountPath: /etc/config-prometheus/
+
+  extraVolumeMounts:
+  - name: prometheus-merged-config
+    mountPath: /etc/config-prometheus/
+
+  extraVolumes:
+  - name: prometheus-merged-config
+    emptyDir: {}
+
+  configPath: /etc/config-prometheus/prometheus.yml
 ```

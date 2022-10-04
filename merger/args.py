@@ -9,7 +9,7 @@ def parse_args():
         '--label-selector',
         dest='label_selector',
         action='store',
-        default="caas.pan-net.eu/prometheus-scrape-config=1",
+        default="prometheus-merge-config=1",
         help='Label selector applied to list ConfigMaps')
     parser.add_argument(
         '--prometheus-config-file-path',
