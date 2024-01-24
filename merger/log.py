@@ -3,7 +3,7 @@ import logging
 
 def setup_logger(logging_level):
     '''Setup logging.logger'''
-    logger = logging.getLogger(__name__)
+    logger = logging.getLogger('merger')
     logger.propagate = False
     logger.setLevel(logging_level)
     ch = logging.StreamHandler()

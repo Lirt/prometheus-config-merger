@@ -26,10 +26,11 @@ Run the program:
 
 ```bash
 python3 -m merger \
-        --prometheus-config-file-path 'my-test-config.yaml' \
-        --label-selector='prometheus-merge-config=1' \
-        --namespace 'monitoring' \
-        --reload-url 'http://localhost:9090/-/reload'
+        --prometheus-config-file-path "my-test-config.yaml" \
+        --label-selector=my-org.io/prometheus-merge-config=1 \
+        --namespace "monitoring" \
+        --reload-url "http://localhost:9090/-/reload" \
+        --logging-level INFO
 ```
 
 ## Integrating with Prometheus Community helm chart
@@ -46,9 +47,10 @@ server:
       imagePullPolicy: IfNotPresent
       args:
       - --prometheus-config-file-path=/etc/config-prometheus/prometheus.yml
-      - --label-selector='my-org.io/prometheus-merge-config=1' \
-      - --namespace 'monitoring' \
-      - --reload-url 'http://localhost:9090/-/reload'
+      - --label-selector=my-org.io/prometheus-merge-config=1 \
+      - --namespace "monitoring" \
+      - --reload-url "http://localhost:9090/-/reload" \
+      - --logging-level INFO
       volumeMounts:
       - name: prometheus-merged-config
         mountPath: /etc/config-prometheus/
