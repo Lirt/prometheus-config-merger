@@ -85,16 +85,29 @@ class Merger():
                     self.logger.info(
                         "Key `%s` in ConfigMap `%s` is a dictionary - merging",
                         key,
-                        config_map.metadata.name)
+                        config_map.metadata.name
+                    )
+                    self.logger.debug(
+                        "Data for key `%s` in ConfigMap `%s`: %s",
+                        key,
+                        config_map.metadata.name,
+                        data_yaml,
+                    )
                     merge(
                         self.prometheus_config,
                         data_yaml,
-                        strategy=Strategy.ADDITIVE)
+                        strategy=Strategy.ADDITIVE
+                    )
+                    self.logger.debug(
+                        "Merged config: %s",
+                        self.prometheus_config,
+                    )
                 else:
                     self.logger.info(
                         "Key `%s` in ConfigMap `%s` is not a dictionary - skipping merge",
                         key,
-                        config_map.metadata.name)
+                        config_map.metadata.name
+                    )
 
         prometheus.save_config(
             self.args.prometheus_config_file_path,

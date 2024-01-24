@@ -22,7 +22,7 @@ def parse_args():
         dest='logging_level',
         action='store',
         default="INFO",
-        help='Logging level')
+        help='Logging level. One of DEBUG, INFO, WARNING, ERROR, CRITICAL')
     parser.add_argument('--reload-url', dest='prometheus_reload_url', action='store',
                         default="http://localhost:9090/-/reload",
                         help='URL where to call for Prometheus reload.')
